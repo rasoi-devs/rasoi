@@ -6,8 +6,7 @@ import Footer from "@/components/Footer";
 const poppins = Itim({ subsets: ["latin"], weight: "400" });
 
 export const metadata = {
-  // TODO: update base URL
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL(process.env.FRONTEND_URL),
   title: {
     default: "Rasoi",
     template: "%s | Rasoi",
