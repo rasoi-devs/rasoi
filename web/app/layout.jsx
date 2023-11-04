@@ -18,7 +18,7 @@ export const metadata = {
       template: "%s | Rasoi",
     },
     description: "A social media for recipes 🍳.",
-    // url: "https://nextjs.org",
+    url: process.env.FRONTEND_URL,
     siteName: "Rasoi",
     images: [
       {
