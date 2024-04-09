@@ -2,7 +2,7 @@
   "name": "rasoi",
   "version": "1.0.0",
   "main": "expo-router/entry",
-  "scheme": "rasoi",
+  "description":"A social media for recipes 🍳.",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

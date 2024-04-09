@@ -18,8 +18,13 @@ env
 docs_build
 site_build
 venv
+winenv
+generated
+logs.txt
+log.txt
 docs.zip
 archive.zip
+*.db
 
 # vim temporary files
 *~

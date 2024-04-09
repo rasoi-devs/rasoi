@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 
 const poppins = Itim({ subsets: ["latin"], weight: "400" });
 
+// TODO: all open graph fields aren't applied to all pages
 export const metadata = {
   metadataBase: new URL(process.env.FRONTEND_URL),
   title: {

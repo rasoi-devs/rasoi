@@ -3,12 +3,15 @@ import React from "react";
 export const metadata = {
   title: "Search",
   description: "Select search method.",
-  openGraph: { title: "Search" },
+  openGraph: {
+    title: "Search",
+    description: "Select search method.",
+  },
 };
 
 function Search() {
   return (
-    <div className="flex min-h-40 flex-row flex-wrap items-center justify-center gap-5">
+    <div className="min-h-40 flex flex-row flex-wrap items-center justify-center gap-5">
       <button className="flex max-h-20 min-w-[15rem] flex-row items-center rounded-2xl bg-primary-500 px-6 py-12 text-3xl text-black hover:bg-primary-700">
         🔍 ingredients
       </button>
