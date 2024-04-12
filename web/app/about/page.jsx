@@ -1,15 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import generateMeta from "@/utils/meta";
 
-export const metadata = {
-  title: "About",
-  openGraph: { title: "About" },
-};
+export async function generateMetadata({ params, searchParams }, parent) {
+  return generateMeta("About");
+}
 
 function Page() {
   return (
-    <>
+    <main>
       <h1 className="mt-3 text-3xl" id="rasoi">
         Rasoi
       </h1>
@@ -50,8 +50,8 @@ function Page() {
       </h2>
       <ul className="list-inside list-disc space-y-1">
         <li>
-          We will try to detect the ingredient name from ingredient&apos;s image, if
-          possible.
+          We will try to detect the ingredient name from ingredient&apos;s
+          image, if possible.
         </li>
         <li>
           A mobile app, possibly in{" "}
@@ -82,7 +82,7 @@ function Page() {
         <li>Learning / Education.</li>
         <li>Social interaction.</li>
       </ul>
-    </>
+    </main>
   );
 }
 

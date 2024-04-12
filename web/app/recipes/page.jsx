@@ -1,15 +1,11 @@
 import React from "react";
 import recipes from "../../public/recipes.json";
 import Link from "next/link";
+import generateMeta from "@/utils/meta";
 
-export const metadata = {
-  title: "Recipes",
-  description: "Check out our recipe collection.",
-  openGraph: {
-    title: "Recipes",
-    description: "Check out our recipe collection.",
-  },
-};
+export async function generateMetadata({ params, searchParams }, parent) {
+  return generateMeta("Recipes", "Check out our recipe collection.");
+}
 
 function Page() {
   return (

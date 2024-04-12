@@ -1,0 +1,254 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Rasoi API", "version": "0.1.0" },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Index",
+        "operationId": "index__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/recommendations": {
+      "get": {
+        "summary": "Recommendations",
+        "operationId": "recommendations_recommendations_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": { "$ref": "#/components/schemas/Recommendation" },
+                  "type": "array",
+                  "title": "Response Recommendations Recommendations Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "get": {
+        "summary": "Recipe Detail",
+        "operationId": "recipe_detail_recipes__id__get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Recipe" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ingredients-search": {
+      "get": {
+        "summary": "Ingredients Search",
+        "operationId": "ingredients_search_ingredients_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Q" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Ingredient" },
+                  "title": "Response Ingredients Search Ingredients Search Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes-search": {
+      "get": {
+        "summary": "Recipes Search",
+        "operationId": "recipes_search_recipes_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Q" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Recipe" },
+                  "title": "Response Recipes Search Recipes Search Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes-from-ingredients": {
+      "get": {
+        "summary": "Recipes From Ingredients",
+        "operationId": "recipes_from_ingredients_recipes_from_ingredients_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" },
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Recipe" },
+                  "title": "Response Recipes From Ingredients Recipes From Ingredients Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Ingredient": {
+        "properties": { "name": { "type": "string", "title": "Name" } },
+        "type": "object",
+        "required": ["name"],
+        "title": "Ingredient"
+      },
+      "Recipe": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "title": { "type": "string", "title": "Title" },
+          "full_ingredients": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Full Ingredients"
+          },
+          "directions": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Directions"
+          },
+          "link": { "type": "string", "title": "Link" },
+          "source": { "type": "string", "title": "Source" }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "full_ingredients",
+          "directions",
+          "link",
+          "source"
+        ],
+        "title": "Recipe"
+      },
+      "Recommendation": {
+        "properties": {
+          "title": { "type": "string", "title": "Title" },
+          "description": { "type": "string", "title": "Description" }
+        },
+        "type": "object",
+        "required": ["title", "description"],
+        "title": "Recommendation"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

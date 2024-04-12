@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import recipes from "../public/recipes.json";
+import RecipeList from "@/components/RecipeList";
 
 // async function getRecommendations() {
-//   const res = await fetch(`${process.env.API_URL}/recommendations`);
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations`);
 //   if (!res.ok) throw new Error("Failed to fetch recommendations");
 //   return res.json();
 // }
@@ -13,24 +14,9 @@ export default async function Home() {
   const recommendations = recipes.slice(0, 6);
 
   return (
-    <>
+    <main>
       <h2 className="mb-3 text-3xl italic">Top picks for you 👌</h2>
-      <div className="flex flex-wrap justify-center gap-3">
-        {recommendations.length === 0 ? (
-          <p className="text-xl text-red-500">No recommendation!</p>
-        ) : (
-          recommendations.map((r, idx) => (
-            <Link
-              href={`/recipes/${r.id}`}
-              key={idx}
-              className="w-[20rem] rounded-2xl bg-background-100 p-6"
-            >
-              <h3 className="text-xl text-secondary-800">{r.title}</h3>
-              <p className="truncate">{r.directions.join(" ")}</p>
-            </Link>
-          ))
-        )}
-      </div>
+      <RecipeList recipes={recommendations} emptyText="No recommendation!" />
 
       <Link
         href="/search"
@@ -38,6 +24,6 @@ export default async function Home() {
       >
         More -&gt;
       </Link>
-    </>
+    </main>
   );
 }

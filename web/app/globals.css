@@ -17,3 +17,85 @@
     transform: scale(1, 1);
   }
 }
+
+/* https://tailwind-to-css.vercel.app/ */
+.ReactTags__tags {
+  color: theme(colors.accent.500);
+  margin: 0.2rem;
+  width: 100%;
+}
+
+.ReactTags__tagInputField {
+  display: block;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  border-color: #d1d5db;
+  width: 100%;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  background-color: #f9fafb;
+}
+
+.ReactTags__tagInputField:focus {
+  border-color: theme(colors.primary.500);
+  outline: none;
+}
+
+.ReactTags__selected {
+  color: theme(colors.black);
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  min-height: 3rem;
+}
+
+.ReactTags__selected .ReactTags__tag {
+  background-color: theme(colors.background.50);
+  border: 1px solid theme(colors.background.200);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ReactTags__selected .ReactTags__remove {
+  font-size: 1.5rem;
+  color: theme(colors.background.400);
+}
+
+/* .ReactTags__tagInput {
+  width: 100%;
+} */
+
+.ReactTags__suggestions {
+  border: 1px solid theme(colors.background.200);
+  background-color: theme(colors.background.50);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  position: absolute;
+  opacity: 0.8;
+  width: calc(100% - 3rem);
+}
+
+.ReactTags__activeSuggestion {
+  background-color: theme(colors.background.200);
+  border-radius: 0.5rem;
+}
+
+/* .ReactTags__editTagInput {
+  color: red;
+}
+
+.ReactTags__editTagInputField {
+  color: red;
+}
+
+.ReactTags__clearAll {
+  color: red;
+} */

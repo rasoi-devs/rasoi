@@ -2,56 +2,15 @@ import { Itim } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import generateMeta from "@/utils/meta";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const poppins = Itim({ subsets: ["latin"], weight: "400" });
 
-// TODO: all open graph fields aren't applied to all pages
-export const metadata = {
-  metadataBase: new URL(process.env.FRONTEND_URL),
-  title: {
-    default: "Rasoi",
-    template: "%s | Rasoi",
-  },
-  description: "A social media for recipes 🍳.",
-  openGraph: {
-    title: {
-      default: "Rasoi",
-      template: "%s | Rasoi",
-    },
-    description: "A social media for recipes 🍳.",
-    url: process.env.FRONTEND_URL,
-    siteName: "Rasoi",
-    images: [
-      {
-        url: "/icon-512-maskable.png",
-        width: 512,
-        height: 512,
-        alt: "Rasoi Logo",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/manifest.json",
-  // appLinks: {
-  //   ios: {
-  //     url: 'https://nextjs.org/ios',
-  //     app_store_id: 'app_store_id',
-  //   },
-  //   android: {
-  //     package: 'com.example.android/package',
-  //     app_name: 'app_name_android',
-  //   },
-  //   web: {
-  //     url: 'https://nextjs.org/web',
-  //     should_fallback: true,
-  //   },
-  // },
-};
+export async function generateMetadata({ params, searchParams }, parent) {
+  return generateMeta();
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -60,7 +19,8 @@ export default function RootLayout({ children }) {
         className={`flex min-h-screen flex-col justify-between p-6 ${poppins.className}`}
       >
         <Nav />
-        <main>{children}</main>
+        {children}
+        <ToastContainer position="bottom-right" />
         <Footer />
       </body>
     </html>

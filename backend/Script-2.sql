@@ -89,3 +89,9 @@ ORDER BY cnt DESC;
 select distinct name from ingredient i where i.name ilike 'sugar%' limit 10;
 
 --ALTER TABLE ingredient ADD COLUMN id SERIAL PRIMARY KEY;
+
+select title from recipe r where r.title ilike 'bana%' limit 20;
+select title from recipe r where lower(r.title) like 'bana%' limit 20;
+
+
+

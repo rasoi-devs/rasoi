@@ -1,8 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Footer() {
+  const [year, setYear] = useState(2024);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="body-font my-6 w-full rounded-3xl bg-background-100 p-6 text-gray-600">
       <div className="container mx-auto flex flex-col items-center sm:flex-row">
@@ -20,7 +28,7 @@ function Footer() {
           <span className="ml-3 text-xl">Rasoi</span>
         </Link>
         <p className="mt-4 text-sm text-gray-500 sm:ml-4 sm:mt-0 sm:border-l-2 sm:border-gray-300 sm:py-2 sm:pl-4">
-          © {new Date().getFullYear()} Rasoi
+          © {year} Rasoi
         </p>
         <span className="mt-4 inline-flex justify-center sm:ml-auto sm:mt-0 sm:justify-start">
           <a

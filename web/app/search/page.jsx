@@ -1,29 +1,32 @@
 import React from "react";
+import generateMeta from "@/utils/meta";
+import Link from "next/link";
 
-export const metadata = {
-  title: "Search",
-  description: "Select search method.",
-  openGraph: {
-    title: "Search",
-    description: "Select search method.",
-  },
-};
+export async function generateMetadata({ params, searchParams }, parent) {
+  return generateMeta("Search", "Select search method.");
+}
 
 function Search() {
   return (
-    <div className="min-h-40 flex flex-row flex-wrap items-center justify-center gap-5">
-      <button className="flex max-h-20 min-w-[15rem] flex-row items-center rounded-2xl bg-primary-500 px-6 py-12 text-3xl text-black hover:bg-primary-700">
+    <main className="min-h-40 flex flex-row flex-wrap items-center justify-center gap-5">
+      <Link
+        href="/search/by-ingredients"
+        className="flex max-h-20 min-w-[15rem] flex-row items-center rounded-2xl bg-primary-500 px-6 py-12 text-3xl text-black hover:bg-primary-700"
+      >
         🔍 ingredients
-      </button>
+      </Link>
 
       <div className="hidden h-full w-[5rem] sm:block">
         <div className="h-40 w-1/2 border-r-2 border-background-200"></div>
       </div>
 
-      <button className="flex max-h-20 min-w-[15rem] flex-row items-center rounded-2xl bg-secondary-500 px-6 py-12 text-3xl text-black hover:bg-secondary-700">
+      <Link
+        href="/search/by-name"
+        className="flex max-h-20 min-w-[15rem] flex-row items-center rounded-2xl bg-secondary-500 px-6 py-12 text-3xl text-black hover:bg-secondary-700"
+      >
         🔍 dish name
-      </button>
-    </div>
+      </Link>
+    </main>
   );
 }
 
