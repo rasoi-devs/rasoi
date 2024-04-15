@@ -14,7 +14,7 @@ db_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Rasoi API")
 
-IMAGES_LOC = "../ml/dataset/archive/Food Images/Food Images"
+IMAGES_LOC = "dataset/archive/Food Images/Food Images"
 UPLOADS_DIR = "uploads"
 
 app.mount("/recipe-images", StaticFiles(directory=IMAGES_LOC), name="recipe-images")
