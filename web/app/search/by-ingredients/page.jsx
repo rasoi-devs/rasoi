@@ -56,10 +56,10 @@ function SearchByIngredients() {
       .then((res) => res.json())
       .then((recipesJson) => {
         setRecipes(recipesJson);
-        setLoading(false);
         if (recipesJson.length === 0) setEmptyMessage("No results found!");
       })
-      .catch((_) => toast.error("You might be offline!"));
+      .catch((_) => toast.error("You might be offline!"))
+      .finally(() => setLoading(false));
   }, [ingredients]);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ function SearchByIngredients() {
   return (
     <main className="flex flex-1 flex-col">
       <ReactTags
-        placeholder="Halwa"
+        placeholder="Coconut"
         tags={ingredients}
         delimiters={[KeyCodes.COMMA, KeyCodes.TAB, KeyCodes.ENTER]}
         handleAddition={handleTagAddition}

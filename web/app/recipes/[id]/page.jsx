@@ -1,16 +1,16 @@
 import React from "react";
 import recipes from "../../../public/recipes.json";
-import Link from "next/link";
+import Image from "next/image";
 
 export async function generateMetadata({ params, searchParams }, parent) {
   const recipe = await fetchRecipe(params.id);
 
   return {
     title: recipe.title,
-    description: recipe.directions.join(" "),
+    description: recipe.instructions.join(" "),
     openGraph: {
       title: recipe.title,
-      description: recipe.directions.join(" "),
+      description: recipe.instructions.join(" "),
     },
   };
 }
@@ -29,34 +29,34 @@ export default async function Page({ params: { id } }) {
   const recipe = await fetchRecipe(id);
 
   return (
-    <main className="d-flex flex-col">
+    <main className="flex flex-col">
       <h1 className="mb-3 text-3xl italic">{recipe.title}</h1>
 
-      <h2 className="mt-3 text-2xl" id="features">
-        Ingredients
-      </h2>
-      <ul className="list-inside list-disc space-y-1">
-        {recipe.full_ingredients.map((i, idx) => (
-          <li key={idx}>{i}</li>
-        ))}
-      </ul>
+      <Image
+        src={`${process.env.NEXT_PUBLIC_API_URL}/recipe-images/${recipe.image_name}.jpg`}
+        width={500}
+        height={500}
+        className="rounded-xl shadow-md self-center"
+        alt={`${recipe.title} image`}
+      />
 
-      <h2 className="mt-3 text-2xl" id="features">
-        Directions
+      <h2 className="mt-3 text-2xl" id="instructions">
+        Instructions
       </h2>
       <ul className="list-inside list-disc space-y-1">
-        {recipe.directions.map((d, idx) => (
+        {recipe.instructions.map((d, idx) => (
           <li key={idx}>{d}</li>
         ))}
       </ul>
 
-      <Link
-        target="_blank"
-        href={`https://${recipe.link}`}
-        className="font-medium text-blue-600 hover:underline"
-      >
-        Source
-      </Link>
+      <h2 className="mt-3 text-2xl" id="ingredients">
+        Ingredients
+      </h2>
+      <ul className="list-inside list-disc space-y-1">
+        {recipe.ingredients_full.map((i, idx) => (
+          <li key={idx}>{i}</li>
+        ))}
+      </ul>
     </main>
   );
 }

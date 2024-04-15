@@ -4,7 +4,7 @@ import React from "react";
 
 function Nav() {
   return (
-    <header className="body-font mb-6 rounded-3xl bg-background-100 p-6 text-gray-600">
+    <header className="body-font mb-6 rounded-3xl bg-background-100 p-6 text-gray-600 shadow-md">
       <div className="container mx-auto flex flex-col flex-wrap items-center md:flex-row">
         <Link
           href="/"

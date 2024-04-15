@@ -7,7 +7,7 @@ DEBUG = False
 USE_PG = True
 PG_USER = "postgres"
 PG_PASS = "password"
-PG_DB = "rasoi1"
+PG_DB = "rasoi3"
 
 engine = None
 

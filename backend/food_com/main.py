@@ -1,25 +1,19 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, Query
+from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 import uvicorn
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from fastapi.middleware.cors import CORSMiddleware
-from middlewares import LimitUploadSize
+
 from db import engine, SessionLocal
 import db_models, crud_schemas
-from image_search import extract_image_features
-from fastapi.staticfiles import StaticFiles
 
 db_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Rasoi API")
 
-IMAGES_LOC = "../ml/dataset/archive/Food Images/Food Images"
-UPLOADS_DIR = "uploads"
-
-app.mount("/recipe-images", StaticFiles(directory=IMAGES_LOC), name="recipe-images")
-
 origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -27,8 +21,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-_3_mb = 3_000_000  # 3 mb in bytes
-app.add_middleware(LimitUploadSize, max_upload_size=_3_mb)
 
 
 def get_db():
@@ -84,7 +76,7 @@ def recipe_detail(id: int, db: Session = Depends(get_db)):
     recipe = (
         db.query(db_models.Recipe)
         .filter(db_models.Recipe.id == id)
-        .order_by(db_models.Recipe.title)
+        .order_by(db_models.Recipe.name)
         .first()
     )
     if recipe is None:
@@ -111,52 +103,28 @@ def recipes_search(q: str, db: Session = Depends(get_db)):
     q = q.lower()
     return (
         db.query(db_models.Recipe)
-        .filter(func.lower(db_models.Recipe.title).like(f"{q}%"))
-        .order_by(db_models.Recipe.title)
+        .filter(func.lower(db_models.Recipe.name).like(f"{q}%"))
+        .order_by(db_models.Recipe.name)
         .limit(20)
         .all()
     )
 
 
-@app.post("/recipes-from-image", response_model=list[crud_schemas.Recipe])
-def recipes_from_image(image_file: UploadFile, db: Session = Depends(get_db)):
-    # TODO: check feature id
-    # TODO: security?
-    filename = image_file.filename
-    # random_hex = secrets.token_hex(8)
-    # if not filename:
-    #     filename = f"{random_hex}.jpg"
-    # else:
-    #     splitted = filename.split(".")
-    #     filename = f"{splitted[0]}-{random_hex}.{''.join(splitted[1:])}"
-    try:
-        contents = image_file.file.read()
-        with open(f"{UPLOADS_DIR}/{filename}", "wb") as f:
-            f.write(contents)
-    except Exception:
-        raise HTTPException(status_code=500, detail="File could not be uploaded.")
-    finally:
-        image_file.file.close()
-
-    query_features = extract_image_features(f"{UPLOADS_DIR}/{filename}")
-    return (
-        db.query(db_models.Recipe)
-        # also l2_distance and max_inner_product
-        .order_by(db_models.Recipe.image_features.cosine_distance(query_features))
-        .limit(5)
-        .all()
-    )
-
-
-@app.get("/recipes-from-ingredients", response_model=list[crud_schemas.Recipe])
-def recipes_from_ingredients(q: list[str] = Query(), db: Session = Depends(get_db)):
-    q = [x.lower() for x in q]
-    return (
-        db.query(db_models.Recipe)
-        .filter(db_models.Recipe.ingredients.contains(q))
-        .limit(20)
-        .all()
-    )
+# @app.get("/recipes-from-ingredients", response_model=list[crud_schemas.Recipe])
+# def recipes_from_ingredients(
+#     q: Annotated[list[str], Query()], db: Session = Depends(get_db)
+# ):
+#     q = [x.lower() for x in q]
+#     return (
+#         db.query(db_models.Recipe)
+#         .join(db_models.RecipeIngredient)
+#         .filter(db_models.RecipeIngredient.c.ingredient_name.in_(q))
+#         .group_by(db_models.Recipe)
+#         .having(func.count(db_models.RecipeIngredient.c.ingredient_name) >= len(q))
+#         # .order_by(db_models.Recipe.name)
+#         .limit(20)
+#         .all()
+#     )
 
 
 if __name__ == "__main__":

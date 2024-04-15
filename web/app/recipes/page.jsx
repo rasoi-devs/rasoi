@@ -22,7 +22,7 @@ function Page() {
               className="w-[20rem] rounded-2xl bg-background-100 p-6"
             >
               <h3 className="text-xl text-secondary-800">{r.title}</h3>
-              <p className="truncate">{r.directions.join(" ")}</p>
+              <p className="truncate">{r.instructions.join(" ")}</p>
             </Link>
           ))
         )}

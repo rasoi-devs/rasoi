@@ -1,5 +1,5 @@
 from db import SessionLocal, engine
-import db_models
+import backend.db_models as db_models
 import kaggle
 import ast
 import multiprocessing as mp

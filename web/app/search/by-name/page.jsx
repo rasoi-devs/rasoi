@@ -24,17 +24,18 @@ function SearchByName() {
       .then((res) => res.json())
       .then((recipesJson) => {
         setRecipes(recipesJson);
-        setLoading(false);
         if (recipesJson.length === 0) setEmptyMessage("No results found!");
       })
-      .catch((_) => toast.error("You might be offline!"));
+      .catch((_) => toast.error("You might be offline!"))
+      .finally(() => setLoading(false));
   };
 
   return (
     <main className="flex flex-1 flex-col">
       <input
         className="block w-full rounded-xl border-2 border-gray-300 bg-gray-50 p-4 text-lg text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-primary-500"
-        placeholder="Halwa"
+        placeholder="Coconut"
+        autoFocus
         value={input}
         onInput={(e) => {
           let i = e.target.value;

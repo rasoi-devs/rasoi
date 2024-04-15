@@ -12,7 +12,7 @@ function Footer() {
   }, []);
 
   return (
-    <footer className="body-font my-6 w-full rounded-3xl bg-background-100 p-6 text-gray-600">
+    <footer className="body-font my-6 w-full rounded-3xl bg-background-100 p-6 text-gray-600 shadow-md">
       <div className="container mx-auto flex flex-col items-center sm:flex-row">
         <Link
           href="/"

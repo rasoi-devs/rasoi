@@ -2,7 +2,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy import Table, event, text
 from sqlalchemy.orm import Session
 from db import SessionLocal, engine
-import db_models
+import backend.db_models as db_models
 import kaggle
 import ast
 from sqlalchemy.dialects.postgresql import insert
