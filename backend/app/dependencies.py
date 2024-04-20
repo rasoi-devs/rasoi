@@ -6,7 +6,11 @@ UPLOADS_DIR = "uploads"
 
 
 def get_similar_by_ingredients(
-    ingredients: list[str], db: Session, recipe_ids_to_exclude: list[int]
+    ingredients: list[str],
+    db: Session,
+    recipe_ids_to_exclude: list[int],
+    skip: int = 0,
+    limit: int = 5,
 ) -> db_models.Recipe:
     igs = [x.lower() for x in ingredients]
     similar_recipes = (
@@ -24,11 +28,12 @@ def get_similar_by_ingredients(
                     ) AS similarity_score
                     FROM recipe
                     ORDER BY similarity_score DESC
-                    LIMIT 5;
+                    LIMIT :limit
+                    OFFSET :skip;
                 """
             )
         )
-        .params(igs=igs, rids=recipe_ids_to_exclude)
+        .params(igs=igs, rids=recipe_ids_to_exclude, skip=skip,limit=limit)
         .all()
     )
     return similar_recipes

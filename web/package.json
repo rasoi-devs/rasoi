@@ -14,6 +14,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
+    "react-infinite-scroller": "^1.2.6",
     "react-tag-input": "^6.9.0",
     "react-toastify": "^10.0.5",
     "sharp": "^0.32.6"

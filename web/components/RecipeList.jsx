@@ -2,11 +2,16 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-function RecipeList({ recipes, emptyText = "No recipe!", skeleton = false }) {
-  if (skeleton) recipes = [...Array(20).keys()];
+function RecipeList({
+  recipes,
+  emptyText = "No recipe!",
+  skeleton = false,
+  nSkeleton = 20,
+}) {
+  if (skeleton) recipes = [...Array(nSkeleton).keys()];
 
   return (
-    <div className="flex flex-wrap justify-center gap-3">
+    <div className="mt-3 flex flex-wrap justify-center gap-3">
       {recipes.length === 0 ? (
         <p className="text-xl text-red-500">{emptyText}</p>
       ) : (

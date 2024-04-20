@@ -14,12 +14,19 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[crud_schemas.Recipe])
-def recommendations(db: Session = Depends(get_db)):
-    return db.query(db_models.Recipe).order_by(db_models.Recipe.title).limit(10).all()
+def recommendations(page: int = 0, db: Session = Depends(get_db)):
+    return (
+        db.query(db_models.Recipe)
+        .order_by(db_models.Recipe.title)
+        .offset(page * 10)
+        .limit(10)
+        .all()
+    )
 
 
 @router.get("/personalized", response_model=list[crud_schemas.Recipe])
 def personalized_recommendations(
+    page: int = 0,
     db: Session = Depends(get_db),
     current_user: db_models.User = Depends(get_current_user),
 ):
@@ -35,7 +42,9 @@ def personalized_recommendations(
 
     # get similar by ingredients
     return get_similar_by_ingredients(
-        list(all_ingredients),
-        db,
-        [r.id for r in engaged_recipes],
+        ingredients=list(all_ingredients),
+        db=db,
+        recipe_ids_to_exclude=[r.id for r in engaged_recipes],
+        skip=page * 10,
+        limit=10,
     )
