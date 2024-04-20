@@ -10,8 +10,7 @@ _A social media for recipes 🍳._
 
 ## Folder Structure
 
-- backend: fastapi backend server + database seeding code.
-- dataset: ...
+- backend: fastapi backend server, ml stuff and database seeding code.
 - docs: documentations like diagrams, progress report etc.
 - frontend: React Native mobile app + web code, discontinued for now...
 - res: random generated resources from web like icons, fonts etc (to be used in app and web both).

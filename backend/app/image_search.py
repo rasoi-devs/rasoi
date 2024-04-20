@@ -1,13 +1,16 @@
 import numpy as np
 
-IMAGES_LOC = "dataset/archive/Food Images/Food Images"
+# from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
+from keras.models import Model
+from keras.applications import MobileNetV3Small
+from keras.preprocessing import image
+from keras.applications.mobilenet_v3 import preprocess_input
+
+
+IMAGES_LOC = "dataset/Food Images/Food Images"
 
 
 def _load_model():
-    # from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
-    from keras.models import Model
-    from keras.applications import MobileNetV3Small
-
     base_model = MobileNetV3Small(
         weights="imagenet",
         include_top=False,
@@ -23,11 +26,6 @@ def _load_model():
 
 
 def _extract_features(image_path, model):
-    # local import, to reduce mem consumption, and only load when required
-    # TODO: test performance for global and local importing
-    from keras.preprocessing import image
-    from keras.applications.mobilenet_v3 import preprocess_input
-
     # model accepts input size of (224, 224, 3)
     # 3 = no. of channels, which is mostly 3 for JPEG (R, G, B)
     # TODO: try with png and transparency?
@@ -72,6 +70,8 @@ def _extract_features(image_path, model):
 # return similar_images
 
 
+model = _load_model()
+
+
 def extract_image_features(file_path):
-    model = _load_model()
     return _extract_features(file_path, model)

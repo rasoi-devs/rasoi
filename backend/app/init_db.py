@@ -20,8 +20,10 @@ import numpy as np
 nlp = spacy.load("en_core_web_sm")
 
 DATASET_DIR = "dataset"
-CSV_LOC = f"{DATASET_DIR}/archive/Food Ingredients and Recipe Dataset with Image Name Mapping.csv"
-IMAGES_LOC = f"{DATASET_DIR}/archive/Food Images/Food Images"
+CSV_LOC = (
+    f"{DATASET_DIR}/Food Ingredients and Recipe Dataset with Image Name Mapping.csv"
+)
+IMAGES_LOC = f"{DATASET_DIR}/Food Images/Food Images"
 INGREDIENTS_JSON_LOC = f"{DATASET_DIR}/ingredients_nlg.json"
 N_ROWS = 13500
 RECREATE = True
@@ -34,17 +36,20 @@ possible_ingredients = set()
 try:
     f = open(INGREDIENTS_JSON_LOC, "r")
 except FileNotFoundError:
-    print("Ingredients dataset not found.")
-    print("Please run `python ingredients_nlg.py` to extract all possible ingredients.")
+    raise Exception(
+        "Ingredients dataset not found.\n"
+        + "Please run `python ingredients_nlg.py` to extract all possible ingredients."
+    )
 else:
     with f:
         possible_ingredients.update(json.load(f)["possible_ingredients"])
 
 
 kaggle.api.authenticate()
-kaggle.api.dataset_download_file(
+kaggle.api.dataset_download_files(
     "pes12017000148/food-ingredients-and-recipe-dataset-with-images",
     path=DATASET_DIR,
+    unzip=True,
     quiet=False,
 )
 

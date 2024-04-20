@@ -1,12 +1,14 @@
-import { Itim } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import generateMeta from "@/utils/meta";
+import Image from "next/image";
+
+import { Itim } from "next/font/google";
+import bgSvg from "./bg.svg";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import bgSvg from "./bg.svg";
-import Image from "next/image";
+import '@smastrom/react-rating/style.css'
 
 const poppins = Itim({ subsets: ["latin"], weight: "400" });
 
@@ -25,7 +27,7 @@ export default function RootLayout({ children }) {
           alt="Background top"
           quality={100}
           fill
-          className="object-cover opacity-20 -z-20"
+          className="object-cover opacity-50 -z-20"
         />
         <Nav />
         {children}

@@ -20,7 +20,7 @@ function SearchByName() {
     if (i.trim().length === 0) return;
 
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes-search?q=${i}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/recipes?q=${i}`)
       .then((res) => res.json())
       .then((recipesJson) => {
         setRecipes(recipesJson);

@@ -11,7 +11,7 @@ function Search() {
     <main className="min-h-40 flex flex-row flex-wrap items-center justify-center gap-5">
       <Link
         href="/search/by-ingredients"
-        className="flex max-h-20 min-w-[15rem] flex-row items-center justify-center rounded-2xl bg-primary-500 px-6 py-12 text-3xl text-black shadow-md hover:bg-primary-700"
+        className="flex max-h-20 min-w-[15rem] flex-row items-center justify-center rounded-2xl bg-primary-500 px-6 py-12 text-3xl text-black shadow-md hover:bg-primary-700 hover:text-white"
       >
         🧾 ingredients
       </Link>
@@ -30,7 +30,7 @@ function Search() {
 
       <Link
         href="/search/by-image"
-        className="flex max-h-20 min-w-[15rem] flex-row items-center justify-center rounded-2xl bg-accent-200 px-6 py-12 text-3xl text-black shadow-md hover:bg-accent-400 hover:text-white"
+        className="flex max-h-20 min-w-[15rem] flex-row items-center justify-center rounded-2xl bg-accent-500 px-6 py-12 text-3xl text-white shadow-md hover:bg-accent-700"
       >
         📷 image
       </Link>

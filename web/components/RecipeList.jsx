@@ -20,9 +20,9 @@ function RecipeList({ recipes, emptyText = "No recipe!", skeleton = false }) {
           >
             {skeleton ? (
               <>
-                <div class="mb-2.5 flex h-36 items-center justify-center rounded-xl bg-background-300">
+                <div className="mb-2.5 flex h-36 items-center justify-center rounded-xl bg-background-300">
                   <svg
-                    class="h-10 w-10 text-background-200"
+                    className="h-10 w-10 text-background-200"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"

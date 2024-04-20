@@ -18,7 +18,7 @@ function SearchByImage() {
     setSelectedImage(acceptedFiles[0]);
     data.append("image_file", acceptedFiles[0]);
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes-from-image`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/recipes-from-image`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -51,7 +51,7 @@ function SearchByImage() {
     <main className="flex flex-1 flex-col">
       <div
         {...getRootProps()}
-        className="flex flex-1 flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary-500 text-center text-2xl outline-none focus:border-4"
+        className="flex flex-1 flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary-500 bg-background-100/50 text-center text-2xl outline-none"
       >
         <input {...getInputProps()} />
         {isDragActive ? (

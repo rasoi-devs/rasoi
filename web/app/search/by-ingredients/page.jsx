@@ -30,7 +30,7 @@ function SearchByIngredients() {
   const fetchSuggestions = (i) => {
     if (i.trim().length === 0) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredients-search?q=${i}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search/ingredients?q=${i}`)
       .then((res) => res.json())
       .then((ingredientsJson) =>
         setSuggestions(
@@ -47,7 +47,7 @@ function SearchByIngredients() {
     }
 
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_API_URL}/recipes-from-ingredients`,
+      `${process.env.NEXT_PUBLIC_API_URL}/search/recipes-from-ingredients`,
     );
     ingredients.forEach((i) => url.searchParams.append("q", i.text));
 

@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
-import recipes from "../public/recipes.json";
 import RecipeList from "@/components/RecipeList";
+import Recommendations from "@/components/Recommendations";
 
 // async function getRecommendations() {
 //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations`);
@@ -9,14 +8,14 @@ import RecipeList from "@/components/RecipeList";
 //   return res.json();
 // }
 
-export default async function Home() {
+export default function Home() {
   // const recommendations = await getRecommendations();
-  const recommendations = recipes.slice(0, 6);
 
   return (
     <main>
       <h2 className="mb-3 text-3xl italic">Top picks for you 👌</h2>
-      <RecipeList recipes={recommendations} emptyText="No recommendation!" />
+      {/* <RecipeList recipes={recommendations} emptyText="No recommendation!" /> */}
+      <Recommendations />
 
       <Link
         href="/search"
