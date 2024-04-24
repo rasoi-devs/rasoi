@@ -1,12 +1,13 @@
 import pandas as pd
-from db import engine
-import db_models, ast
+from .db import engine
+from . import db_models
+import ast, shutil, json
+from glob import glob
 from sqlalchemy.types import String
 from sqlalchemy.dialects.postgresql import ARRAY
 import spacy, math, json, kaggle
 from tqdm import tqdm
 
-# from ingredients import possible_ingredients
 from sqlalchemy.dialects.postgresql import insert
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import text
@@ -20,11 +21,16 @@ import numpy as np
 nlp = spacy.load("en_core_web_sm")
 
 DATASET_DIR = "dataset"
+
+EXTRA_RECIPES_JSON = "dataset/extra_recipes_processed.json"
+EXTRA_IMGS_DIR = "dataset/extra_imgs_processed"
+
 CSV_LOC = (
     f"{DATASET_DIR}/Food Ingredients and Recipe Dataset with Image Name Mapping.csv"
 )
 IMAGES_LOC = f"{DATASET_DIR}/Food Images/Food Images"
-INGREDIENTS_JSON_LOC = f"{DATASET_DIR}/ingredients_nlg.json"
+# INGREDIENTS_JSON_LOC = f"{DATASET_DIR}/ingredients_nlg.json"
+INGREDIENTS_JSON_LOC = f"{DATASET_DIR}/ingredients_food_com.json"
 N_ROWS = 13500
 RECREATE = True
 BATCH_SIZE = 256
@@ -49,7 +55,7 @@ kaggle.api.authenticate()
 kaggle.api.dataset_download_files(
     "pes12017000148/food-ingredients-and-recipe-dataset-with-images",
     path=DATASET_DIR,
-    unzip=True,
+    # unzip=True,
     quiet=False,
 )
 
@@ -59,17 +65,21 @@ base_model = MobileNetV3Small(
     weights="imagenet",
     include_top=False,
     pooling="avg",
-    # optional input shape is provided, just to supress a warning
+    # optional input shape is provided, just to suppress a warning
     # by default, model accepts (224, 224, 3)
     input_shape=(224, 224, 3),
 )
 
-# features layer should be an intermediate layer (last layer is for prediction)
+print("copying all extra images...")
+for filepath in glob(f"{EXTRA_IMGS_DIR}/*.jpg"):
+    shutil.copy(filepath, IMAGES_LOC)
+
+# features layer should be an intermediate layer (last layer is for classification)
 features_layer = base_model.get_layer("expanded_conv_10_project").output
 model = Model(inputs=base_model.input, outputs=features_layer)
 
 
-def _extract_features_batch(image_names):
+def _extract_features_batch(image_names, batch_size=BATCH_SIZE):
     # NOTE: to understand working of this function
     # see for a similar function (_extract_features in image_search.py file
     batch_features = []
@@ -89,7 +99,7 @@ def _extract_features_batch(image_names):
         batch_images.append(img_array)
 
     batch_images = np.vstack(batch_images)
-    features = model.predict(batch_images, batch_size=BATCH_SIZE, verbose=0)
+    features = model.predict(batch_images, batch_size=batch_size, verbose=0)
     for feature in features:
         batch_features.append(feature.flatten())
     return np.array(batch_features).astype("float32")
@@ -135,6 +145,48 @@ if RECREATE:
     db_models.Base.metadata.drop_all(bind=engine)
     db_models.Base.metadata.create_all(bind=engine)
 
+
+"""
+from extra recipes (gform + food.com)
+"""
+print("uploading extra recipes...")
+
+N_EXTRAS = 0
+with open(EXTRA_RECIPES_JSON, "r") as f:
+    N_EXTRAS = len(json.load(f))
+
+df = pd.read_json(EXTRA_RECIPES_JSON, orient="records")
+df["image_features"] = list(
+    _extract_features_batch(df["image_name"], batch_size=len(df))
+)
+
+df.to_sql(
+    name="recipe",
+    index=False,
+    con=engine,
+    if_exists="append",
+    dtype={
+        "ingredients_full": ARRAY(String),
+        "ingredients": ARRAY(String),
+        "instructions": ARRAY(String),
+        "image_features": Vector(math.prod(FEATURE_LAYER_OUT_SHAPE)),
+    },
+)
+
+# TODO: why do this? just insert from possible_ingredients?
+df["ingredients"].to_sql(
+    name="ingredient",
+    con=engine,
+    if_exists="append",
+    method=_sql_insert_ingredients,
+)
+
+
+"""
+from actual dataset
+"""
+print("uploading from main dataset...")
+
 pbar = tqdm(total=N_ROWS)
 for df in pd.read_csv(CSV_LOC, index_col=0, chunksize=BATCH_SIZE):
     df: pd.DataFrame = df.rename(
@@ -156,17 +208,17 @@ for df in pd.read_csv(CSV_LOC, index_col=0, chunksize=BATCH_SIZE):
     # Cleaned_Ingredients is useless column, create a ingredients NER column
     df = df.drop(columns=["Cleaned_Ingredients"])
     df["ingredients"] = df["ingredients_full"].apply(_extract_ingredients)
+
     df["image_features"] = list(_extract_features_batch(df["image_name"]))
 
     df.to_sql(
         name="recipe",
-        index_label="id",
+        index=False,
         con=engine,
         if_exists="append",
         dtype={
             "ingredients_full": ARRAY(String),
             "ingredients": ARRAY(String),
-            "cleaned_ingredients": ARRAY(String),
             "instructions": ARRAY(String),
             "image_features": Vector(math.prod(FEATURE_LAYER_OUT_SHAPE)),
         },

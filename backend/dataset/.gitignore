@@ -1,3 +1,9 @@
 *
 !chunks
+!extra_recipes.json
+!extra_recipes_og.csv
+!gform_imgs
+!gform_imgs/*
+!extra_imgs_processed
+!food_com_imgs
 !.gitignore

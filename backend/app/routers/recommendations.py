@@ -32,8 +32,8 @@ def personalized_recommendations(
 ):
     # get "engagements"
     engaged_recipes = set()
-    for r in current_user.ratings:
-        engaged_recipes.add(r.recipe)
+    engaged_recipes.update([r.recipe for r in current_user.ratings])
+    engaged_recipes.update([c.recipe for c in current_user.comments])
 
     # get engagements' ingredients
     all_ingredients = set()

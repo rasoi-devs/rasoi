@@ -23,6 +23,7 @@ export default function RatingInteractive({ recipeId, allRatings }) {
   }, [allRatings]);
 
   const submitRating = async (val) => {
+    // if not authenticated, send user to /auth
     const accessToken = window.localStorage.getItem("accessToken");
     if (!accessToken) router.push("/auth");
 

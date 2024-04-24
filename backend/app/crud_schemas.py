@@ -68,3 +68,18 @@ class Rating(RatingCreate):
 
     class Config:
         from_attributes = True
+
+
+class CommentCreate(BaseModel):
+    content: str
+
+
+class Comment(CommentCreate):
+    id: int
+    created_at: datetime
+    updated_at: datetime | None
+    user: User
+    recipe_id: int
+
+    class Config:
+        from_attributes = True

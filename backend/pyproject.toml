@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Backend for Rasoi"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.2"
+numpy = "^1.26.4"
+en_core_web_sm = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz"}
+# NOTE: tensrflow having issues in windows installation. Use:
+# poetry run pip install tensorflow
+# tensorflow = "^2.16.1"
+spacy = "^3.7.4"
+setuptools = "^69.5.1"
+wheel = "^0.43.0"
+uvicorn = "^0.29.0"
+sqlalchemy = "^2.0.29"
+python-dotenv = "^1.0.1"
+python-jose = { extras = ["cryptography"], version = "^3.3.0" }
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+pillow = "^10.3.0"
+pgvector = "^0.2.5"
+fastapi = "^0.110.2"
+tqdm = "^4.66.2"
+psycopg = { extras = ["binary"], version = "^3.1.18" }
+python-multipart = "^0.0.9"
+kaggle = "^1.6.12"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

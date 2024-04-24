@@ -19,7 +19,7 @@ ACCESS_TOKEN_EXPIRE_DAYS = 30
 
 # TODO: salting?
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 def get_user(email: str, db: Session) -> db_models.User | None:

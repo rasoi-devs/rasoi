@@ -4,8 +4,10 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import RecipeList from "./RecipeList";
 import InfiniteScroll from "react-infinite-scroller";
+import { useRouter } from "next/navigation";
 
 function Recommendations() {
+  const router = useRouter();
   const [recipes, setRecipes] = useState([]);
 
   const showAuthInfo = () => {
@@ -43,10 +45,8 @@ function Recommendations() {
       .then((res) => res.json())
       .then((jsonData) => setRecipes([...recipes, ...jsonData]))
       .catch(() => {
-        // show general recommendations as fallback
-        fetchGenenralRecommendations(page);
-        // don't repeat on refetch
-        if (page < 1) showAuthInfo();
+        toast.error("Session expired! Please login.");
+        router.push("/auth");
       });
     //   .finally(() => setLoading(false));
   };
@@ -55,7 +55,7 @@ function Recommendations() {
     <InfiniteScroll
       pageStart={-1}
       loadMore={(page) => fetchRecommendations(page)}
-      //  FIXME: when will it end?
+      // FIXME: when will it end?
       hasMore={true}
       loader={<RecipeList key={0} skeleton={true} nSkeleton={3} />}
     >

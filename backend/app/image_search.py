@@ -15,12 +15,12 @@ def _load_model():
         weights="imagenet",
         include_top=False,
         pooling="avg",
-        # optional input shape is provided, just to supress a warning
+        # optional input shape is provided, just to suppress a warning
         # by default, model accepts (224, 224, 3)
         input_shape=(224, 224, 3),
     )
 
-    # features layer should be an intermediate layer (last layer is for prediction)
+    # features layer should be an intermediate layer (last layer is for classification)
     features_layer = base_model.get_layer("expanded_conv_10_project").output
     return Model(inputs=base_model.input, outputs=features_layer)
 

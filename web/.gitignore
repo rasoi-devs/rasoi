@@ -26,7 +26,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files
-.env
+# eh, who cares for a demo app?
+# .env
 
 # vercel
 .vercel

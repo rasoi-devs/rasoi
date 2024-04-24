@@ -15,11 +15,14 @@ log.txt
 Pipfile.lock
 env3.*
 env
-.env
+# eh, who cares for a demo app?
+# .env
 docs_build
 site_build
 venv
 winenv
+.venv
+.winenv
 generated
 logs.txt
 log.txt

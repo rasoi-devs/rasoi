@@ -33,6 +33,7 @@ class Recipe(Base):
     image_features = Column(Vector(math.prod(FEATURE_LAYER_OUT_SHAPE)), nullable=False)
 
     ratings = relationship("Rating", back_populates="recipe")
+    comments = relationship("Comment", back_populates="recipe")
 
 
 class Ingredient(Base):
@@ -51,6 +52,7 @@ class User(Base):
     active = Column(Boolean, nullable=False, default=True)
 
     ratings = relationship("Rating", back_populates="user")
+    comments = relationship("Comment", back_populates="user")
 
 
 class Rating(Base):
@@ -69,3 +71,22 @@ class Rating(Base):
     recipe_id = Column(ForeignKey("recipe.id"))
     user = relationship("User", back_populates="ratings")
     recipe = relationship("Recipe", back_populates="ratings")
+
+
+
+class Comment(Base):
+    __tablename__ = "comment"
+
+    id = Column(BigInteger, primary_key=True)
+    # TODO: UTC time
+    created_at = Column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    content = Column(String, nullable=False)
+
+    # TODO: cascade?
+    user_id = Column(ForeignKey("user.id"))
+    recipe_id = Column(ForeignKey("recipe.id"))
+    user = relationship("User", back_populates="comments")
+    recipe = relationship("Recipe", back_populates="comments")

@@ -32,7 +32,7 @@ model = MobileNetV3Small(
     weights="imagenet",
     include_top=False,
     pooling="avg",
-    # input shape is provided, just to supress a warning
+    # input shape is provided, just to suppress a warning
     input_shape=(224, 224, 3),
 )
 model.trainable = False

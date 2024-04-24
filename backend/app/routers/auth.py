@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from ..db import get_db
@@ -34,6 +34,7 @@ def register(
 ) -> crud_schemas.Token:
     # OAuth2 uses username, but internally in this app we will be using email
     # so, email = username internally
+    # TODO: security and validation
     email = form_data.username.strip()
     password = form_data.password.strip()
     if (not email) or (not password):

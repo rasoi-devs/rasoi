@@ -43,7 +43,7 @@ function RecipeList({
               <>
                 <div className="relative h-36">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_API_URL}/recipe-images/${r.image_name}.jpg`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/recipe-images/${encodeURIComponent(r.image_name)}.jpg`}
                     fill
                     className="rounded-xl object-cover"
                     alt={`${r.title} image`}
