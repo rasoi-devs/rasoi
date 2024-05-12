@@ -4,7 +4,7 @@ from tqdm import tqdm
 import json, ast
 
 # RecipeNLG is a gigantic dataset of recipes.
-# We can use this to get a reference list of all possiible ingredients.
+# We can use this to get a reference list of all possible ingredients.
 
 DATASET_DIR = "dataset"
 N_LINES = 22_31_142

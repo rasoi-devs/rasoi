@@ -33,7 +33,7 @@ def recipes_search(q: str = Query(), db: Session = Depends(get_db)):
     q = q.lower()
     return (
         db.query(db_models.Recipe)
-        .filter(func.lower(db_models.Recipe.title).like(f"{q}%"))
+        .filter(func.lower(db_models.Recipe.title).like(f"%{q}%"))
         .order_by(db_models.Recipe.title)
         .limit(20)
         .all()

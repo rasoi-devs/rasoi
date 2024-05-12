@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import RecipeList from "./RecipeList";
 import InfiniteScroll from "react-infinite-scroller";
@@ -45,8 +45,16 @@ function Recommendations() {
       .then((res) => res.json())
       .then((jsonData) => setRecipes([...recipes, ...jsonData]))
       .catch(() => {
-        toast.error("Session expired! Please login.");
-        router.push("/auth");
+        // if the API root URL doesn't work, then server might be off
+        // TODO: add this checking for all other pages, or abstract this check
+        fetch(process.env.NEXT_PUBLIC_API_URL)
+          .then(() => {
+            toast.error("Session expired! Please login.");
+            router.push("/auth");
+          })
+          .catch(() => {
+            toast.error("Server caught fire! 🔥");
+          });
       });
     //   .finally(() => setLoading(false));
   };

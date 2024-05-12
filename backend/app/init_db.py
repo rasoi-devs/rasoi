@@ -44,7 +44,7 @@ try:
 except FileNotFoundError:
     raise Exception(
         "Ingredients dataset not found.\n"
-        + "Please run `python ingredients_nlg.py` to extract all possible ingredients."
+        + "Please run `python ingredients_food_com.py` to extract all possible ingredients."
     )
 else:
     with f:
@@ -79,7 +79,7 @@ features_layer = base_model.get_layer("expanded_conv_10_project").output
 model = Model(inputs=base_model.input, outputs=features_layer)
 
 
-def _extract_features_batch(image_names, batch_size=BATCH_SIZE):
+def _extract_features_batch(image_names, batch_size):
     # NOTE: to understand working of this function
     # see for a similar function (_extract_features in image_search.py file
     batch_features = []
@@ -151,35 +151,35 @@ from extra recipes (gform + food.com)
 """
 print("uploading extra recipes...")
 
-N_EXTRAS = 0
-with open(EXTRA_RECIPES_JSON, "r") as f:
-    N_EXTRAS = len(json.load(f))
-
 df = pd.read_json(EXTRA_RECIPES_JSON, orient="records")
-df["image_features"] = list(
-    _extract_features_batch(df["image_name"], batch_size=len(df))
-)
+num_chunks = len(df) // BATCH_SIZE + 1
+for i in tqdm(range(num_chunks)):
+    chunk: pd.DataFrame = df[i * BATCH_SIZE : (i + 1) * BATCH_SIZE]
 
-df.to_sql(
-    name="recipe",
-    index=False,
-    con=engine,
-    if_exists="append",
-    dtype={
-        "ingredients_full": ARRAY(String),
-        "ingredients": ARRAY(String),
-        "instructions": ARRAY(String),
-        "image_features": Vector(math.prod(FEATURE_LAYER_OUT_SHAPE)),
-    },
-)
+    chunk["image_features"] = list(
+        _extract_features_batch(chunk["image_name"], batch_size=BATCH_SIZE)
+    )
 
-# TODO: why do this? just insert from possible_ingredients?
-df["ingredients"].to_sql(
-    name="ingredient",
-    con=engine,
-    if_exists="append",
-    method=_sql_insert_ingredients,
-)
+    chunk.to_sql(
+        name="recipe",
+        index=False,
+        con=engine,
+        if_exists="append",
+        dtype={
+            "ingredients_full": ARRAY(String),
+            "ingredients": ARRAY(String),
+            "instructions": ARRAY(String),
+            "image_features": Vector(math.prod(FEATURE_LAYER_OUT_SHAPE)),
+        },
+    )
+
+    # TODO: why do this? just insert from possible_ingredients?
+    chunk["ingredients"].to_sql(
+        name="ingredient",
+        con=engine,
+        if_exists="append",
+        method=_sql_insert_ingredients,
+    )
 
 
 """
@@ -209,7 +209,10 @@ for df in pd.read_csv(CSV_LOC, index_col=0, chunksize=BATCH_SIZE):
     df = df.drop(columns=["Cleaned_Ingredients"])
     df["ingredients"] = df["ingredients_full"].apply(_extract_ingredients)
 
-    df["image_features"] = list(_extract_features_batch(df["image_name"]))
+    # from trial and error...
+    df = df[df["image_name"] != "#NAME?"]
+
+    df["image_features"] = list(_extract_features_batch(df["image_name"], len(df)))
 
     df.to_sql(
         name="recipe",

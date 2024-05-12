@@ -86,6 +86,6 @@ def user_exists(q: str = Query(), db: Session = Depends(get_db)) -> bool:
     return db.query(db_models.User).filter(db_models.User.email == q).first() != None
 
 
-@router.get("/me", response_model=crud_schemas.User)
+@router.get("/me", response_model=crud_schemas.UserWithEngagements)
 def read_users_me(current_user: db_models.User = Depends(get_current_user)):
     return current_user

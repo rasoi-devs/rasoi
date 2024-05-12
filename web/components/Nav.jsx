@@ -26,11 +26,11 @@ function Nav() {
           <Link href="/search" className="mr-5 hover:text-gray-900">
             Search
           </Link>
-          <Link href="/recipes" className="mr-5 hover:text-gray-900">
-            Recipes
-          </Link>
           <Link href="/about" className="mr-5 hover:text-gray-900">
             About
+          </Link>
+          <Link href="/profile" className="mr-5 hover:text-gray-900">
+            Profile
           </Link>
         </nav>
       </div>

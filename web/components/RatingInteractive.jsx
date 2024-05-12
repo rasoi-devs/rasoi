@@ -5,7 +5,11 @@ import { Rating as ReactRating } from "@smastrom/react-rating";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export default function RatingInteractive({ recipeId, allRatings }) {
+export default function RatingInteractive({
+  recipeId,
+  allRatings,
+  nextUrlPrefix,
+}) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
 
@@ -25,7 +29,10 @@ export default function RatingInteractive({ recipeId, allRatings }) {
   const submitRating = async (val) => {
     // if not authenticated, send user to /auth
     const accessToken = window.localStorage.getItem("accessToken");
-    if (!accessToken) router.push("/auth");
+    if (!accessToken) {
+      router.push(`/auth?next=${nextUrlPrefix}#rate-interactive`);
+      throw Error("Please authenticate!");
+    }
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/recipes/${recipeId}/ratings`,
@@ -40,7 +47,7 @@ export default function RatingInteractive({ recipeId, allRatings }) {
       },
     );
     if (!res.ok) {
-      router.push("/auth");
+      router.push(`/auth?next=${nextUrlPrefix}#rate-interactive`);
       throw Error("Please authenticate!");
     }
     router.refresh();
@@ -48,6 +55,7 @@ export default function RatingInteractive({ recipeId, allRatings }) {
 
   return (
     <ReactRating
+      id="rate-interactive"
       className="max-w-[10rem]"
       value={rating}
       readOnly={rating > 0}

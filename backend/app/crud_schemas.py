@@ -59,12 +59,22 @@ class RatingCreate(BaseModel):
     rate: int
 
 
-class Rating(RatingCreate):
+class BaseRating(RatingCreate):
     id: int
     created_at: datetime
     updated_at: datetime | None
-    user: User
     recipe_id: int
+
+
+class RatingWithRecipe(BaseRating):
+    recipe: Recipe
+
+    class Config:
+        from_attributes = True
+
+
+class Rating(BaseRating):
+    user: User
 
     class Config:
         from_attributes = True
@@ -74,12 +84,30 @@ class CommentCreate(BaseModel):
     content: str
 
 
-class Comment(CommentCreate):
+class BaseComment(CommentCreate):
     id: int
     created_at: datetime
     updated_at: datetime | None
-    user: User
     recipe_id: int
+
+
+class CommentWithRecipe(BaseComment):
+    recipe: Recipe
+
+    class Config:
+        from_attributes = True
+
+
+class Comment(CommentCreate):
+    user: User
+
+    class Config:
+        from_attributes = True
+
+
+class UserWithEngagements(User):
+    comments: list[CommentWithRecipe]
+    ratings: list[RatingWithRecipe]
 
     class Config:
         from_attributes = True

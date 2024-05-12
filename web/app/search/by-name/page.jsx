@@ -33,7 +33,7 @@ function SearchByName() {
   return (
     <main className="flex flex-1 flex-col">
       <input
-        className="block w-full rounded-xl border-2 border-gray-300 bg-gray-50 p-4 text-lg text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-primary-500"
+        className="block w-full rounded-xl border-2 border-gray-300 bg-gray-50 p-4 text-lg text-gray-900 focus:border-primary-500 outline-none focus:ring-primary-500"
         placeholder="Coconut"
         autoFocus
         value={input}

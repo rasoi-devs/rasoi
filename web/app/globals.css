@@ -81,6 +81,7 @@
   position: absolute;
   opacity: 0.8;
   width: calc(100% - 3rem);
+  z-index: 999;
 }
 
 .ReactTags__activeSuggestion {

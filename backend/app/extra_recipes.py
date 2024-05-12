@@ -61,6 +61,7 @@ for r in tqdm(recipes):
     response = requests.get(f"https://drive.google.com/file/d/{image_link}/view")
 
     # parse html, find image filename
+    # TODO: ignore / drop the recipe, if img not found
     soup = BeautifulSoup(response.text, "html.parser")
     filename = soup.find("meta", itemprop="name")["content"]
 

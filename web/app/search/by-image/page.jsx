@@ -14,6 +14,8 @@ function SearchByImage() {
   const [emptyMessage, setEmptyMessage] = useState("Drop / pick an image...");
 
   const onDrop = useCallback((acceptedFiles) => {
+    if (!acceptedFiles[0]) return;
+
     const data = new FormData();
     setSelectedImage(acceptedFiles[0]);
     data.append("image_file", acceptedFiles[0]);
@@ -37,6 +39,7 @@ function SearchByImage() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected: () => toast.error("File might be too big!"),
     autoFocus: true,
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE,

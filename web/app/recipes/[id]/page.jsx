@@ -4,18 +4,18 @@ import RecipeList from "@/components/RecipeList";
 import RatingInteractive from "@/components/RatingInteractive";
 import { Rating } from "@smastrom/react-rating";
 import CommentInteractive from "@/components/CommentInteractive";
+import generateMeta from "@/utils/meta";
 
 export async function generateMetadata({ params, searchParams }, parent) {
   const recipe = await fetchRecipe(params.id);
 
-  return {
-    title: recipe.title,
-    description: recipe.instructions.join(" "),
-    openGraph: {
-      title: recipe.title,
-      description: recipe.instructions.join(" "),
-    },
-  };
+  return generateMeta(
+    recipe.title,
+    recipe.instructions.join(" "),
+    `${process.env.NEXT_PUBLIC_API_URL}/recipe-images/${encodeURIComponent(
+      recipe.image_name,
+    )}.jpg`,
+  );
 }
 
 async function fetchRecipe(id) {
@@ -104,7 +104,11 @@ export default async function Page({ params: { id } }) {
         <p>
           Your <span className="text-secondary-500">rating</span>:
         </p>
-        <RatingInteractive recipeId={recipe.id} allRatings={ratings} />
+        <RatingInteractive
+          recipeId={recipe.id}
+          allRatings={ratings}
+          nextUrlPrefix={`/recipes/${recipe.id}`}
+        />
       </div>
 
       <h2 className="mt-3 text-2xl text-accent-500">You may also like 😋</h2>
@@ -114,7 +118,10 @@ export default async function Page({ params: { id } }) {
         Comments
       </h2>
 
-      <CommentInteractive recipeId={recipe.id} />
+      <CommentInteractive
+        recipeId={recipe.id}
+        nextUrlPrefix={`/recipes/${recipe.id}`}
+      />
 
       {comments.length > 0 &&
         comments.map((c, idx) => (

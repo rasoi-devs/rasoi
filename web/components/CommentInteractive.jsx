@@ -4,29 +4,19 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-function CommentInteractive({ recipeId }) {
+function CommentInteractive({ recipeId, nextUrlPrefix }) {
   const router = useRouter();
   const [comment, setComment] = useState("");
-
-  const warnAuth = () => {
-    // on pressing the comment entry textbox,
-    // check auth status and fire warning
-    const accessToken = window.localStorage.getItem("accessToken");
-    if (!accessToken) {
-      toast.warn("Please authenticate to post comment!");
-      return null;
-    }
-    return accessToken;
-  };
 
   const submitComment = async (e) => {
     e.preventDefault();
 
-    // if not authenticated, send user to /auth
-    const accessToken = warnAuth();
+    // if not authenticated, send user to /auth,
+    // after auth, send back to that page, scroll to comment
+    const accessToken = window.localStorage.getItem("accessToken");
     if (!accessToken) {
-      router.push("/auth");
-      return;
+      router.push(`/auth?next=${nextUrlPrefix}#comment-interactive`);
+      throw Error("Please authenticate!");
     }
 
     const cmnt = comment.trim();
@@ -45,7 +35,7 @@ function CommentInteractive({ recipeId }) {
       },
     );
     if (!res.ok) {
-      router.push("/auth");
+      router.push(`/auth?next=${nextUrlPrefix}#comment-interactive`);
       throw Error("Please authenticate!");
     }
     router.refresh();
@@ -53,6 +43,7 @@ function CommentInteractive({ recipeId }) {
 
   return (
     <form
+      id="comment-interactive"
       onSubmit={(e) =>
         toast.promise(submitComment(e), {
           pending: "Submit comment...",
@@ -68,17 +59,16 @@ function CommentInteractive({ recipeId }) {
         <textarea
           id="comment"
           rows="4"
-          className="w-full border-0 px-0 text-sm text-gray-900 focus:outline-none focus:ring-0"
+          className="w-full border-0 px-0 text-gray-900 focus:outline-none focus:ring-0"
           placeholder="Write a comment..."
           required
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          onClick={warnAuth}
         />
       </div>
       <button
         type="submit"
-        className="inline-flex items-center rounded-lg bg-primary-500 px-4 py-2.5 text-center text-xs font-medium text-white outline-none hover:bg-primary-700 focus:ring-4 focus:ring-primary-200"
+        className="inline-flex items-center rounded-lg bg-primary-500 px-4 py-2.5 text-center font-medium text-white outline-none hover:bg-primary-700 focus:ring-4 focus:ring-primary-200"
       >
         Post comment
       </button>

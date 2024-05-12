@@ -1,13 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const router = useRouter();
+
+  // to get where to redirect after auth success
+  const [next, setNext] = useState("/");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [accept, setAccept] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // manually add hash fragment as well
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextUrl = urlParams.get("next") || "/";
+    const hash = window.location.hash;
+    setNext(nextUrl + hash);
+  }, []);
 
   const authHelper = (isRegister = false) => {
     setLoading(true);
@@ -29,6 +43,7 @@ function Page() {
         window.localStorage.setItem("accessToken", accessToken);
         window.localStorage.setItem("user", JSON.stringify(user));
         toast.success("Welcome! 👋");
+        router.push(next);
       })
       .catch((_) => toast.error("Can't authorize!"))
       .finally(() => setLoading(false));
@@ -116,7 +131,7 @@ function Page() {
                   aria-describedby="accept"
                   type="checkbox"
                   name="accept"
-                  value={accept}
+                  checked={accept}
                   onChange={(e) => setAccept(e.target.checked)}
                   required
                   disabled={loading}

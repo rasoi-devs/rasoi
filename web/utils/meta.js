@@ -2,7 +2,23 @@
 export default function generateMeta(
   title = "Rasoi",
   description = "A social media for recipes 🍳.",
+  imageUrl,
 ) {
+  let images = [];
+  if (imageUrl) {
+    images.push({
+      url: imageUrl,
+      alt: title,
+    });
+  }
+
+  images.push({
+    url: "/icon-512-maskable.png",
+    width: 512,
+    height: 512,
+    alt: "Rasoi Logo",
+  });
+
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL),
     title: title,
@@ -12,14 +28,7 @@ export default function generateMeta(
       description: description,
       url: process.env.NEXT_PUBLIC_FRONTEND_URL,
       siteName: "Rasoi",
-      images: [
-        {
-          url: "/icon-512-maskable.png",
-          width: 512,
-          height: 512,
-          alt: "Rasoi Logo",
-        },
-      ],
+      images: images,
       locale: "en_US",
       type: "website",
     },

@@ -3,8 +3,8 @@ import kaggle
 from tqdm import tqdm
 import json, ast
 
-# RecipeNLG is a gigantic dataset of recipes.
-# We can use this to get a reference list of all possiible ingredients.
+# foodcom-recipes-and-reviews is a big dataset of recipes.
+# We can use this to get a reference list of all possible ingredients.
 
 DATASET_DIR = "dataset"
 N_LINES = 5_225_17
