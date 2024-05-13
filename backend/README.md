@@ -1,6 +1,6 @@
 # Rasoi
 
-<img src='web/public/icon-512.png' width="64">
+<img src='../web/public/icon-512.png' width="64">
 
 _A social media for recipes 🍳._
 
@@ -36,7 +36,6 @@ _A social media for recipes 🍳._
 - run
     - dev: `poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload`
     - prod: `poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000`
-    - for deployment in a server like ec2, use the server.txt file to get an idea.
 
 These steps aren't thoroughly checked, may go wrong, use your developer mind to debug!
 
