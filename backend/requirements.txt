@@ -2,7 +2,7 @@ absl-py==2.1.0
 annotated-types==0.6.0
 anyio==3.7.1
 astunparse==1.6.3
-bcrypt==4.1.2
+bcrypt==4.2.0
 bleach==6.1.0
 blis==0.7.11
 catalogue==2.0.10
@@ -45,7 +45,6 @@ opt-einsum==3.3.0
 optree==0.11.0
 packaging==24.0
 pandas==2.2.1
-passlib==1.7.4
 pgvector==0.2.5
 pillow==10.3.0
 preshed==3.0.9

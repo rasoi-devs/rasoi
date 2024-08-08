@@ -2,15 +2,67 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import generateMeta from "@/utils/meta";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import styles from "./styles.module.css";
 
 export async function generateMetadata({ params, searchParams }, parent) {
   return generateMeta("About");
 }
 
-function Page() {
+// fetch readme from Github
+async function fetchReadme() {
+  const res = await fetch(
+    "https://raw.githubusercontent.com/rasoi-devs/rasoi/main/README.md",
+  );
+  if (!res.ok) throw new Error("Failed to fetch readme");
+  const content = await res.text();
+  return content
+    .replace(
+      "backend/README.md",
+      "https://github.com/rasoi-devs/rasoi/tree/main/backend#readme",
+    )
+    .replace("web/public/icon", "/icon");
+}
+
+async function Page() {
+  const projectReadme = await fetchReadme();
+
   return (
     <main>
-      <h1 className="mt-3 text-3xl" id="rasoi">
+      <Markdown
+        className={styles.markdown}
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          a(props) {
+            const { node, ...rest } = props;
+            return (
+              <Link
+                target="_blank"
+                className="font-medium text-blue-600 hover:underline"
+                {...rest}
+              />
+            );
+          },
+          img(props) {
+            const { node, ...rest } = props;
+            if (props.src === "/icon-512.png")
+              return (
+                <Image
+                  src="/icon-512.png"
+                  width="64"
+                  height="64"
+                  alt="Rasoi Logo"
+                />
+              );
+
+            return <img {...rest} />;
+          },
+        }}
+      >
+        {projectReadme}
+      </Markdown>
+      {/* <h1 className="mt-3 text-3xl" id="rasoi">
         Rasoi
       </h1>
       <Image src="/icon-512.png" width="64" height="64" alt="Rasoi Logo" />
@@ -81,7 +133,7 @@ function Page() {
         <li>Cooking.</li>
         <li>Learning / Education.</li>
         <li>Social interaction.</li>
-      </ul>
+      </ul> */}
     </main>
   );
 }

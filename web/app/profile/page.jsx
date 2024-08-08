@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { PieChart } from "react-minimal-pie-chart";
 import uniqolor from "uniqolor";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const router = useRouter();
+
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [pieChartData, setPieChartData] = useState([]);
@@ -18,6 +21,7 @@ function Page() {
     if (!accessToken) {
       router.push("/auth?next=/profile");
       toast.error("Please authenticate!");
+      return;
     }
 
     setLoading(true);
@@ -54,14 +58,14 @@ function Page() {
         // top 20
         chartData = chartData.slice(0, 20);
         setPieChartData(chartData);
-        console.log("c", chartData);
       })
       .catch(() => {
         router.push("/auth?next=/profile");
         toast.error("Please authenticate!");
+        return;
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (
@@ -99,51 +103,57 @@ function Page() {
             <span className="font-bold">Active:</span>{" "}
             {profile.active ? "Yes" : "No"}
           </div>
-          <div className="mt-3">
-            <h3 className="text-lg font-bold">Comments</h3>
-            <ul>
-              {profile.comments.map((comment) => (
-                <li key={comment.id}>
-                  <Link
-                    href={`/recipes/${comment.recipe_id}`}
-                    target="_blank"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {comment.content}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold">Ratings</h3>
-            <ul>
-              {profile.ratings.map((rating) => (
-                <li key={rating.id}>
-                  <Link
-                    href={`/recipes/${rating.recipe_id}`}
-                    className="text-blue-500 hover:underline"
-                    target="_blank"
-                  >
-                    {rating.rate}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <PieChart
-            className="w-[25%] self-center"
-            animate={true}
-            segmentsShift={5}
-            radius={45}
-            data={pieChartData}
-            label={({ dataEntry }) => dataEntry.title}
-            labelStyle={{
-              fontSize: ".25rem",
-              opacity: ".8",
-              color:"white"
-            }}
-          />
+          {profile.comments.length !== 0 && (
+            <div className="mt-3">
+              <h3 className="text-lg font-bold">Comments</h3>
+              <ul>
+                {profile.comments.map((comment) => (
+                  <li key={comment.id}>
+                    <Link
+                      href={`/recipes/${comment.recipe_id}`}
+                      target="_blank"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {comment.content}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {profile.ratings.length !== 0 && (
+            <div>
+              <h3 className="text-lg font-bold">Ratings</h3>
+              <ul>
+                {profile.ratings.map((rating) => (
+                  <li key={rating.id}>
+                    <Link
+                      href={`/recipes/${rating.recipe_id}`}
+                      className="text-blue-500 hover:underline"
+                      target="_blank"
+                    >
+                      {rating.rate}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {pieChartData.length !== 0 && (
+            <PieChart
+              className="w-[20rem] self-center"
+              animate={true}
+              segmentsShift={5}
+              radius={45}
+              data={pieChartData}
+              label={({ dataEntry }) => dataEntry.title}
+              labelStyle={{
+                fontSize: ".25rem",
+                opacity: ".8",
+                color: "white",
+              }}
+            />
+          )}
         </>
       )}
     </>

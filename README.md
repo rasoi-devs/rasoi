@@ -6,6 +6,8 @@ _A social media for recipes 🍳._
 
 [Logo Source](https://www.flaticon.com/free-icon/frying-pan_1222796?term=frying+pan&related_id=1222796)
 
+# **[Live demo](https://rasoi-devs.github.io/demo)**
+
 > Note: all of the specifications given below are not finalized, may change if required.
 
 > Note: running and setting up backend is complex, follow the `README.md` inside [`backend/`](backend/README.md).

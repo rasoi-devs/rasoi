@@ -20,7 +20,6 @@ uvicorn = "^0.29.0"
 sqlalchemy = "^2.0.29"
 python-dotenv = "^1.0.1"
 python-jose = { extras = ["cryptography"], version = "^3.3.0" }
-passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 pillow = "^10.3.0"
 pgvector = "^0.2.5"
 fastapi = "^0.110.2"
@@ -30,6 +29,7 @@ python-multipart = "^0.0.9"
 kaggle = "^1.6.12"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.3"
+bcrypt = "^4.2.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.0"

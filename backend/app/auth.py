@@ -3,7 +3,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from . import crud_schemas, db_models
 from .db import SessionLocal
 from dotenv import load_dotenv
@@ -13,12 +13,9 @@ load_dotenv()
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = "HS256"
-# FIXME: eh, who cares about a project app's security?
+# FIXME: unsecure ik
 ACCESS_TOKEN_EXPIRE_DAYS = 30
 
-
-# TODO: salting?
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
@@ -34,7 +31,7 @@ def get_user(email: str, db: Session) -> db_models.User | None:
 def create_user(email: str, password: str, db: Session) -> db_models.User | None:
     if get_user(email, db) is not None:
         return None
-    hashed_password = pwd_context.hash(password)
+    hashed_password = _hash_password(password)
     db_user = db_models.User(email=email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
@@ -48,7 +45,7 @@ def authenticate_user(
     user = get_user(email, db)
     if not user:
         return False
-    if not pwd_context.verify(password, user.hashed_password):
+    if not _verify_password(password, user.hashed_password):
         return False
     return user
 
@@ -80,3 +77,19 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> db_models.User:
     if user is None:
         raise credentials_exception
     return user
+
+
+# https://github.com/pyca/bcrypt/issues/684#issuecomment-1902590553
+# Hash a password using bcrypt
+def _hash_password(password: str):
+    pwd_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
+    return hashed_password.decode("utf-8")
+
+
+# Check if the provided password matches the stored password (hashed)
+def _verify_password(plain_password: str, hashed_password: str) -> bool:
+    plain_pw_bytes = plain_password.encode("utf-8")
+    hash_pw_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password=plain_pw_bytes, hashed_password=hash_pw_bytes)

@@ -24,13 +24,17 @@ _A social media for recipes 🍳._
 > Note that all python files contain some settings constants at the top, change them as per your requirements.
 
 - dataset
-    - (if you don't have poetry) `pip install poetry`
+    - (if you don't have pipx) `sudo apt install pipx` - or similar command acc. to OS
+    - (if you don't have poetry) `pipx install poetry`
+    - cd into `<project root>/backend`
     - `poetry install`
     - `poetry run pip install tensorflow`
     - `poetry run python -m app.extra_recipes`
     - `poetry run python -m app.ingredients_food_com`
     - create a database called `rasoi3` in postgres
-    - `poetry run python -m app.init_db` (you might need to extract some files in specific folder)
+    - create pgvector extension to the database (`CREATE EXTENSION vector;`)
+    - `poetry run python -m app.init_db`
+        - Note: you might need to extract some files to specific folder.
 
 
 - run
@@ -42,7 +46,11 @@ These steps aren't thoroughly checked, may go wrong, use your developer mind to 
 
 ### Production deplyment (example)
 
-> I have used [caddy](https://caddyserver.com/), instead of the commonly used [nginx](https://nginx.org/) for deployment and experimenting with a easily-configurable proxy server. The caddy file was of about 10 lines - simple.
+> Note: This is just a demo project, ofcourse **revealing server configuration might not be a good idea** in real-world production projects. These are just some notes for future reference - if I ever set up a server like this.
+
+> Also, I would **love to be hacked** and learn something new out of it - **please do reach out to me** or **just raise an issue** if you could find a vulnerability in the server :)
+
+> I have tried **[caddy](https://caddyserver.com/)**, but it might be unstable. The server stops to respond after a certain period. Better, use nginx.
 
 ```sql
 create database rasoi3;
@@ -53,6 +61,8 @@ create extension vector;
 ```bash
 # server is weak, just generate locally, then dump and upload and restore on server (use dbeaver or pg_dump for creating backup file)
 psql -h localhost -U postgres -d rasoi3 < dump-rasoi3-202404251609.sql
+# if you directly restore from the db backup, no ned to run init_db.py, for the most part
+# also, just copy the extra_images_processed images to Food Images folder (if you don't run init_db.py)
 
 
 # create two service unit files, so that it automatic restarts on reboot - good practice for deployment.
@@ -68,11 +78,14 @@ User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/git/rasoi/backend
 Environment="PATH=/home/ubuntu/git/rasoi/backend/.venv/bin"
-ExecStart=poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
+ExecStart=/home/ubuntu/.local/bin/poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 
+
+# chmod +x start.bash -> to web/start.bash
+# also add server URL for image loading in web/next.conf.js
 
 sudo nano /etc/systemd/system/rasoi-web.service
 
@@ -101,6 +114,34 @@ sudo systemctl enable rasoi-web
 # to stop the server
 sudo systemctl stop rasoi-backend
 sudo systemctl stop rasoi-web
+
+# Create nginx config for 2 proxy servers (:80, :90) for frontend and backend respectively.
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_tokens off;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        include proxy_params;
+    }
+}
+
+server {
+    listen 90;
+    listen [::]:90;
+
+    server_tokens off;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        include proxy_params;
+    }
+}
+
+
+# change frontend and backend endpoints in .env in web/ folder
 
 # logs
 journalctl -u rasoi-backend.service
