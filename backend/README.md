@@ -85,7 +85,7 @@ WantedBy=multi-user.target
 
 
 # chmod +x start.bash -> to web/start.bash
-# also add server URL for image loading in web/next.conf.js
+# also add **backend** server URL for image loading in web/next.conf.js
 
 sudo nano /etc/systemd/system/rasoi-web.service
 
@@ -146,3 +146,8 @@ server {
 # logs
 journalctl -u rasoi-backend.service
 ```
+
+### Troubleshoot
+- `chmod +x start.bash` -> to `web/start.bash`.
+- Check `.env`, set proper location.
+- Also add **backend** server URL for image loading in web/next.conf.js

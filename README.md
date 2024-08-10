@@ -8,17 +8,22 @@ _A social media for recipes 🍳._
 
 # **[Live demo](https://rasoi-devs.github.io/demo)**
 
+![Homepage](docs/screenshots/infinite%20recipe%20recommendations.png)
+![Search by image](docs/screenshots/srch%20by%20img.png)
+![Search by ingredients](docs/screenshots/search%20by%20ing.png)
+
 > Note: all of the specifications given below are not finalized, may change if required.
 
 > Note: running and setting up backend is complex, follow the `README.md` inside [`backend/`](backend/README.md).
 
 ## Folder Structure
 
-- backend: fastapi backend server, ml stuff and database seeding code.
-- docs: documentations like diagrams, progress report etc.
-- frontend: NextJs and Tailwind, Mobile app using React Native
-- res: random generated resources from web like icons, fonts etc (to be used in app and web both).
-- web: web only frontend code.
+- **backend:** fastapi backend server, ml stuff and database seeding code.
+- **docs:** documentations like diagrams, progress report etc.
+- **frontend:** Mobile app using React Native (unmaintained).
+- **res:** random generated resources from web like icons, fonts etc (to be used in app and web both).
+- **web:** web only frontend code.
+- **rasoi-aws-lambda:** aws lambda function in go to keep the deployed ec2 instance running (hack).
 
 ## Features
 
