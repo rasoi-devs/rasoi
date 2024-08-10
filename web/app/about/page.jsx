@@ -18,11 +18,15 @@ async function fetchReadme() {
   if (!res.ok) throw new Error("Failed to fetch readme");
   const content = await res.text();
   return content
-    .replace(
+    .replaceAll(
       "backend/README.md",
       "https://github.com/rasoi-devs/rasoi/tree/main/backend#readme",
     )
-    .replace("web/public/icon", "/icon");
+    .replaceAll("web/public/icon", "/icon")
+    .replaceAll(
+      "docs/screenshots",
+      "https://raw.githubusercontent.com/rasoi-devs/rasoi/main/docs/screenshots",
+    );
 }
 
 async function Page() {
