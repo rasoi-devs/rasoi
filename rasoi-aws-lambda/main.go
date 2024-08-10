@@ -163,9 +163,7 @@ func HandleRequest(ctx context.Context, event events.CloudWatchEvent) (*Result, 
 	if !(reachableFe && reachableBe) {
 		// reboot ec2
 		rebootDone = rebootInstance()
-		if rebootDone {
-			sendMail(reachableFe, reachableBe, rebootDone)
-		}
+		sendMail(reachableFe, reachableBe, rebootDone)
 	}
 
 	return &Result{
