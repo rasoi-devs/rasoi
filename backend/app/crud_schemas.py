@@ -98,7 +98,7 @@ class CommentWithRecipe(BaseComment):
         from_attributes = True
 
 
-class Comment(CommentCreate):
+class Comment(BaseComment):
     user: User
 
     class Config:
